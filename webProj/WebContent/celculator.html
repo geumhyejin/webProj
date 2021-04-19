@@ -85,7 +85,8 @@
                oper = touchVal; 
             }else {
                 if(oper == '+') {
-                    dp.innerHTML = (firstVal + lastVal)
+                    result = parseInt(firstVal)+parseInt(lastVal)
+                    dp.innerHTML = result
                 }else if (oper == '-') {
                     dp.innerHTML = (firstVal - lastVal)
                 }else if(oper =='*') {
