@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>domEx.html</title>
+    <script>
+        var tbl = document.getElementById('tbl');
+
+        console.log(1); // 실행순서 확인용
+        // ┌>Event 이름
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log(2); // 실행순서 확인용
+            var saveBtn = document.getElementById('saveBtn');
+            console.log(saveBtn);
+            saveBtn.addEventListener('click', function () {
+                var iName = document.getElementById('name');
+                var iId = document.querySelector('input[name="id"]');
+                var iScore = document.getElementsByTagName('input')[2];
+                var iGender = document.querySelector('input[name="gender"]:checked');
+                // console.log(iGender.value);
+
+                // 마우스 over/out function 호출
+                var tr = document.createElement('tr');
+                tr.setAttribute('align', 'center');
+                tr.onmouseover = mouseOverFunc;
+                tr.onmouseout = mouseOutFunc;
+
+                // name
+                var td = document.createElement('td');
+                td.innerHTML = iName.value;
+                tr.appendChild(td);
+
+                // id
+                var td = document.createElement('td');
+                td.innerHTML = iId.value;
+                tr.appendChild(td);
+
+                // score
+                var td = document.createElement('td');
+                td.innerHTML = iScore.value;
+                tr.appendChild(td);
+
+                // gender
+                var td = document.createElement('td');
+                td.innerHTML = iGender.value;
+                tr.appendChild(td);
+
+                //button
+                var td1 = document.createElement('td'); // button이 들어갈 새로운 td추가
+                var buttons = document.createElement('button'); // button 생성
+                buttons.innerHTML = "삭제"; // button Label 넣어주기
+
+                buttons.onclick = deleteRow; // button 클릭시 삭제
+
+                td1.appendChild(buttons); // td1에 button 넣어주기
+                tr.appendChild(td1); // tr에 td1 추가
+                tbl.appendChild(tr);
+
+                tbl.appendChild(tr);
+            });
+        });
+
+        //   window.onload = function() {  // window.onload: 코드를 완전히 다 읽은 후에 fuction()을 실행
+        //       console.log(2);
+        //       var saveBtn = document.getElementById('saveBtn');
+        //       console.log(saveBtn);
+        //   }
+    </script>
+</head>
+
+<body>
+    <div>
+        <div>이름 : <input type='text' name='name' id='name'></div>
+        <div>I　D : <input type='text' name='id' id='id'></div>
+        <div>점수 : <input type='text' name='score' id='score'></div> <!--┌> 회원리스트의 gender value와 동일할 것-->
+        <div>성별 : <input type='radio' name='gender' id = 'name' value="Male">남성
+            <input type='radio' name='gender' id = 'name' value="Female">여성</div>
+
+        <div>
+            <button id='saveBtn'>저장</button>
+            <button id='modifyBtn'>수정</button>
+        </div>
+    </div>
+    <hr>
+
+    <table id="tbl"></table>
+    <caption>회원리스트</caption>
+
+    <script>
+        console.log(3); // 실행순서 확인용
+        var p1 = {
+            name: 'Hong',
+            id: 'user1',
+            score: 80,
+            gender: 'Male'
+        }
+        var p2 = {
+            name: 'Choi',
+            id: 'user2',
+            score: 84,
+            gender: 'Female'
+        }
+        var p3 = {
+            name: 'shin',
+            id: 'user3',
+            score: 86,
+            gender: 'Male'
+        }
+        var p4 = {
+            name: 'Kim',
+            id: 'user4',
+            score: 82,
+            gender: 'Female'
+        }
+
+        var persons = [p1, p2, p3, p4];
+
+        var tbl = document.getElementById('tbl');
+        tbl.setAttribute('border', '1');
+
+        // title 함수 만들기
+        function createTitle() {
+            console.log(arguments); // 코드 하단에 createTitle()의
+            // () 안에 있는 arguments들을 확인.
+
+            var tr = document.createElement('tr');
+            for (var i = 0; i < arguments.length; i++) {
+                var th = document.createElement('th');
+                th.innerHTML = arguments[i];
+                tr.appendChild(th);
+            }
+
+            tbl.appendChild(tr);
+        }
+
+        // 데이터를 테이블로 생성하는 함수 만들기
+        function createData() {
+            for (var p of persons) {
+                var tr = document.createElement('tr');
+                tr.setAttribute('align', 'center');
+                tr.onmouseover = mouseOverFunc; // 마우스를 올리면 배경색 라벤더
+                tr.onmouseout = mouseOutFunc; // 마우스를 내리면 배경색 없음
+
+                for (var filed in p) {
+                    if (filed == 'id') {
+                        var td = document.createElement('td');
+                        td.onclick = function () {
+                            // modifyFunc();
+                            console.log(this);
+                            var idVal = this.innerHTML;
+                            var nameVal = this.previousSibling.innerHTML;
+                            var scoreVal = this.nextSibling.innerHTML;
+                            var genderVal = this.parentNode.childNodes[3].innerHTML;
+                            console.log(idVal, nameVal, scoreVal, genderVal);
+
+                            document.getElementById('name').value = nameVal;
+                            document.getElementById('id').value = idVal;
+                            document.getElementById('score').value = scoreVal;
+                            var genders = document.querySelectorAll('input[name="gender"]');
+                            for(var i = 0; i < genders.length; i++){
+                                if(genders[i].value == genderVal){
+                                    genders[i].checked = true;
+                                }
+                            }
+                            console.log(genders);
+                        }
+                        td.innerHTML = p[filed];
+                        tr.appendChild(td);
+                    } else {
+                        var td = document.createElement('td');
+                        td.innerHTML = p[filed];
+                        tr.appendChild(td);
+                    }
+
+                }
+
+                var td1 = document.createElement('td'); // button이 들어갈 새로운 td추가
+                var buttons = document.createElement('button'); // button 생성
+                buttons.innerHTML = "삭제"; // button Label 넣어주기
+                buttons.onclick = deleteRow; // button 클릭 시 삭제
+
+                td1.appendChild(buttons); // td1에 button 넣어주기
+                tr.appendChild(td1); // tr에 td1 추가
+                tbl.appendChild(tr);
+
+            }
+        }
+        createTitle('이름', 'ID', '점수', '성별', '기능');
+        createData();
+
+        function mouseOverFunc() {
+            this.style.backgroundColor = 'lavender';
+        }
+
+        function mouseOutFunc() {
+            this.style.backgroundColor = '';
+        }
+
+        function deleteRow() {
+            console.log(this.parentNode.parentNode.remove());
+        }
+
+    </script>
+</body>
+
+</html>
