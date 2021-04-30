@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery/map2.html</title>
+<script src="../js/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$.ajax({
+			url: '../MOCK_DATA.json',
+			dataType : 'json' ,
+			success : function(result) {
+				let mapData = $(result).filter(function(i,o) {
+					return i < 10;
+				}).map(funtion(i,o) {
+					let trTag = $('<tr />');
+					trTag.append(
+						$('<td />').html(o.id),
+						$('<td />').html(o.first_name),
+						$('<td />').html(o.last_name),
+						$('<td />').html(o.email)
+				);	
+						
+					return trTag;
+				});
+				console.log(mapData[0]);
+				$('#tbl').html(mapData.get()); //배열을 element(태크)로 변환
+				//document.getElementById('tbl').appendChild(mapData.get());
+			},
+			error: function (reject) {
+				console.error(reject);
+			}
+		});
+	});
+	
+</script>
+</head>
+<body>
+
+</body>
+</html>

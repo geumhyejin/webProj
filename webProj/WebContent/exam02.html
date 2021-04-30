@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>exam02.html</title>
+</head>
+<body>
+    <script>
+          var myObj = {
+            first_name :"Dasie",
+            email : "ddickon0@cnet.com",
+            gender : "Female"
+        };
+        // json = > javascript object notation
+        var jsonObj = '{"first_name": "Dasie", "email": "ddickon0@cnet.com","gender": "Female"}';
+        // json=> object 제이슨을 parse 를이용해 자바오브젝트타입으로 바꿔줌
+        var data = JSON.parse(jsonObj);
+        // object => json 다시 제이슨으로 변경할때는 stringify 사용
+        var json= JSON.stringify(data);
+
+        console.log(json);
+
+        var membersjson =  //서버에서 받아온 사원정보
+        '[{"mem_id":1,"first_name":"Dasie","last_name":"Dickon","email":"ddickon0@cnet.com","gender":"Female","address":"0 Vahlen Point"]'
+        var memberObj = document.parse(members_Json);
+
+        var table = document.createElement('table');
+        table.setAttribute('border', '1');
+        var cap = document.createElement('caption');//테이블에 대한 설명(제목)
+        cap.innerHTML = '사원리스트';
+        table.appendChild(cap);
+        for( var i=0; i < memberObj.length; i++) {
+            var tr = document.createElement('tr');
+            for(field in memberObj[i]) {  //오브젝트에 for in 을 쓰면 오브젝트가 가지고있는 필드만큼
+                var td = document.createElement('td');
+                var text = document.createTextNode(memberObj[i][field]);
+                td.appendChild(text);
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+        document.body.appendChild(table);
+
+        console.log(memberObj);
+
+    </script>
+</body>
+</html>

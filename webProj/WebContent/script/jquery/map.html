@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>map.html</title>
+    <script src='../js/jquery-3.6.0.min.js'></script>
+</head>
+
+<body>
+    <p>Value: </p>
+    <form action="">
+        <input typw="text" name="name" id="" value="kildong">
+        <input typw="text" name="passwd" id="" value="1234">
+        <input typw="text" name="age" id="" value="10">
+    </form>
+    <script>
+        $('p').append(
+            $('input').map(function () {    //인풋에각각의벨류를가져오겠다
+                return $(this).val();
+            })).get().join(','); // 각각의 요소를 가져와서 문자타입으로 바꾼다
+
+            var obj = [{area:'부산'},{area:'서울'},{area:'전주'}];
+            //$(obj).each();
+            $.each(obj, function(i,o){
+                console.log(i,o) 
+            });
+            $.each(obj, function () {
+                console.log(i,o) 
+            })
+    </script>
+</body>
+
+</html>

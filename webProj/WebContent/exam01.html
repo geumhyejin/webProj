@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>exam01.html</title>
+    <script>
+         document.addEventListener('DOMContentLoded', function () {
+            var frm = document.getElementById('frm');
+            frm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    console.log(e);
+                    var name = document.getElementById('name').value;
+                    var age = document.getElementById('age').value;
+                    var tel = document.getElementById('tel').value
+
+                        
+
+                    var xhtp = new XMLHttpRequest();
+                    xhtp.open('post', 'empList.do');
+                    xhtp.setRequestHeader('Content-type', 'applicationn/x-www-form-urlencoded');
+                    xhtp.send(data);
+
+                    var table = document.getElementById('tbl')
+
+                    xhtp.onreadystatechange = function () { //브라우저표에 정보 추가
+                        if (xhtp.readyState == 4 && xhtp.status == 200) {
+                          
+                            var obj = JSON.parse(xhtp.responseText);
+                       
+                            //저장시 칸과함께 브라우저에 보임
+                          
+                            var tr = document.createElement('tr')
+                            for (var field in obj)
+                                var td = document.createElement('td') //한칸
+                            var text = document.createTextNode(obj[field])
+
+                            td.appendChild(text)
+                            tr.appendChild(td);
+                        }
+                        var btn = document.createElement('button');
+                        btn.innerHTML = '삭제';
+                        btn.onclick = function () {
+                            this.parentNode.parentNode.remove();
+                        }
+                        var tdTag = document.createElement('td');
+                        tdTag.appendChild(btn);
+                        tr.appendChild(tdTag)
+                        table.appendChild(tr);
+                    }
+            })
+
+        })
+        
+    </script>
+</head>
+<body>
+    <form id="frm" action="empList.do" method="POST">
+		Name: <input type="text" name="name" id="name"><br>
+		Age: <input type="text" name="age" id="age"><br>
+		Tel: <input type="text" name="tel" id="tel"><br>
+	
+		<input type="submit" value="저장">
+		<input type="reset" value="취소">
+    </form>
+</body>
+</html>

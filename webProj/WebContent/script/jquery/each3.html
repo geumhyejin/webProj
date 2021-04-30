@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jquery/each3.html</title>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            
+            $.ajax({             
+                url :'../../MOCK_DATA.json',  
+                dataType : 'json',            
+                success: successCallFnc,    
+                error : errorCallFnc,
+            });    //xmlhttprequest();  xhtp.resultText
+           
+        });
+
+        function successCallFnc(resolve) {
+             //console.log(resolve);
+             let tb1  = $('<table />');
+             tb1.attr('border','1'); 
+                    $.each(resolve, function(i,o) {   //첫번째값 인텍스값, 두번째값 배열안에든 값 (오브젝트였음ex first name , last name...)
+                       let trTag = $('<tr />')   //row 생성
+                       trTag.attr('id',o.id);  
+                       trTag.mouseover(mouseoverFnc) ;
+                       trTag.mouseout(mouseoutFnc) ;
+                        let btn = $('<button />').html('Del');
+                        btn.click((evnt) => {
+                            console.log($ (this),evnt);   
+                             // $(this)의 의미 -> function인 경우 event 대상, arrow function인 경우 object
+                            evnt.currentTarget .parentNode.parentNode.remove();
+                        });
+                        trTag.append (
+                       $('<td />').html (o.id),    //
+                       $('<td />').html (o.first_name),  //
+                       $('<td />').html (o.last_name),  //
+                       $('<td />').html (o.email),
+                       $('<td />').append(btn)    //
+                       );
+                       tb1.append(trTag);
+                    });
+
+                    $('#show').append(tb1);   //<p>1</p><p>2</p>...<p>20</p>
+
+        }
+
+        function errorCallFnc(reject){
+            console.log(reject);
+
+        }
+
+        function mouseoverFnc() {
+            $(this).css('background-color','yellow');
+
+        }
+        function mouseoutFnc() {
+            $(this).css('background-color','');
+
+        }
+
+      function clickFnc() {
+        alert($(this).attr('id'));
+      }
+
+        
+    </script>
+</head>
+<body>
+    <div id ="show"></div>
+</body>
+</html>

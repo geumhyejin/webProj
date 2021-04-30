@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>객체 조작 메서드</title>
+<script src="../js/jquery-3.6.0.min.js"></script>
+<script>
+	$(function(){
+		//let hello = $('p').html('<a href ="#">Hello</a>'); //링크 값으로 가져옴
+		let hello = $('p').text();   //text로만가지고오면 내용이 텍스트가됨 
+		let id = $ ('input[type ="text"]').attr('name');   //벨류 속성일때 val 사용 ex) input, attr ...
+		console.log(id);
+	})
+</script>
+</head>
+<body>
+	<p><span>Hello</span></p>
+	<input type = 'text' name='id' value = 'hello'>
+</body>
+</html>
