@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>jquery/upload.html</title>
+	<style>
+		#img {
+			height: 220px;
+			width: 180px;
+		}
+
+		#show {
+			padding: 15px;
+		}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			//db데이터를화면에 출력    <div><table></table></div>
+			$.ajax({
+				url: '../getFileListServlet',
+				dataType: 'json', //json 파일을 object파일로 변환해줌
+				type: 'get',
+
+				success: function (result) {
+					//테이블을활용해서 리스트출력
+					console.log(result); //[{},{},...] 배열갯수만큼 루핑이돔
+					let $table = $('<table />').attr('border', '1');
+					$table.append(getTitle());
+
+					//result 결과 table 에 append
+					for (let obj of result) {
+						let $tr = $('<tr />');
+						let alink = $('<a />').attr('href', '#').html(obj.title);
+
+						alink.click(linkClickCallBack);
+						$tr.click(function () {
+							console.log('tr클릭')
+						});
+						$tr.append(
+							$('<td />').html(obj.num),    
+							$('<td />').append(obj.title),
+							$('<td />').html(obj.author),
+							$('<td />').html(obj.filename), //대소문자 똑같이 맞춰야됨. (데이터못가져옴)
+							$('<td />').html(obj.day),
+							$('<td />').append($btns = $('<button />').html('삭제').click(delrow))
+						);
+						$table.append($tr);
+					}
+					$('#show').append($table);
+				},
+				error: function (err) {
+					console.log(err);
+				}
+
+			});
+
+			  function delrow() {
+			         console.log(this);
+			      }
+			
+			function delclickCallBack(e) {
+				console.log();
+			}
+
+			//링크 클릭했을때 callback함수
+			function linkClickCallBack(e) {
+				console.log('a클릭', $(this).parentsUntil('table').eq(0).children().eq(0).html());
+				let num = $(this).parent().parent().children().eq(0).html();
+				num = $(this) //a태그
+					.parent() //td 태그
+					.prev() //<td>num</td>
+					.html(); //num
+				e.preventDefault(); //Default 기능을 차단
+				e.stopPropagarion(); //이벤트 전파차단
+				$.ajax({
+					url: '../getFileServlet', //호출할페이지(서블릿)
+					data: 'num=1' + num,
+					dataType: 'json',
+					type: 'get',
+					success: function (result) {
+						console.log(result);
+						//화면에 가져온정보를 보여주도록
+						$('#num').val(result.num);
+						$('#author').val(result.author);
+						$('#title').val(result.title);
+						$('#img').attr('src', '../upload/' + result.fileName);
+					},
+					error: function (reject) {
+						console.log(reject);
+					}
+				});
+			}
+			//테이블의 타이틀
+			function getTitle() {
+				let $title = $('<tr />');
+				$title.append(
+					$('<th />').html('번호'),
+					$('<th />').html('제목'),
+					$('<th />').html('저자'),
+					$('<th />').html('파일명'),
+					$('<th />').html('날짜'),
+					$('<th />').html('삭제')
+				);
+				return $title;
+			}
+			//파일을선택하면 이미지가 나타나도록
+			$('#filename').change(function () {
+				for (let file of this.files) {
+					$('#img').attr('src', URL.createObjectURL(file));
+				}
+			});
+
+			//전송을 누르면..
+			$('#frm').submit(function (e) {
+				e.preventDefault();
+				let frm = document.getElementById('frm');
+				let data = new FormData(frm);
+				for (let k of data.entries()) {
+					console.log(k);
+				}
+
+				//비동기 호출 .. 파일업로드의 서블릿
+				$.ajax({
+					contentType: false,
+					processData: false,
+					url: $('#frm').attr('action'),
+					type: 'post',
+					dataType: 'json',
+					data: data,
+					success: function (result) {
+						console.log(result);
+					},
+					error: function (err) {
+						console.log(err);
+					}
+				});
+			})
+		});
+	</script>
+</head>
+
+<body>
+
+	<h1>Ajax 파일 업로드</h1>
+	<form id='frm' action='../fileUploadServlet' method='post' enctype='meltiport/form-data'>
+		<table border="1">
+			<tr>
+				<td><label for="num">번호</label></td>
+				<td><input type="text" name="num" id="num"></td>
+				<td rowspan="4"><img src="" alt="선택한파일." id='img'></td>
+			</tr>
+			<tr>
+				<td><label for="author">저자</label></td>
+				<td><input type="text" name="author" id="author"></td>
+
+			</tr>
+			<tr>
+				<td><label for="title">제목</label></td>
+				<td><input type="text" name="title" id="title"></td>
+			</tr>
+			<tr>
+				<td><label for="filename">파일첨부</label>
+					</tb>
+				<td><input type="file" name="filename" id="filename"></td>
+			</tr>
+			<tr>
+				<td cospan="3"><input type="submit"> <input type="reset"></td>
+			</tr>
+		</table>
+	</form>
+		<div id='show'></div>
+		<script>
+		
+		</script>
+</body>
+
+</html>
