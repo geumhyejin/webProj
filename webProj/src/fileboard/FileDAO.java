@@ -177,4 +177,33 @@ public class FileDAO {
 
 		return file;
 	}
+	public boolean updateFile(FileVO vo) {
+		conn = DBCon.getConnect();
+		int modiftCnt = 0;    
+		String sql ="update file_board"
+				+"set author='?'"    
+				+", title='?'"
+				+", file_name='?'"
+				+"where num=?";
+
+		try {
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, vo.getAuthor());
+			psmt.setString(2, vo.getTitle());
+			psmt.setString(3, vo.getFileName());
+			psmt.setInt(4, vo.getNum());
+			modiftCnt = psmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close();
+		}
+		return modiftCnt ==0 ? false : true;
+	}
+
+	private void close() {
+		
+		
+	}
 }

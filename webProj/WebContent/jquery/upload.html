@@ -137,6 +137,37 @@
 					}
 				});
 			})
+			
+			//수정버튼 클릭이벤트
+			$('#modifyBtn').click(function(e){
+				e.preventDefault();
+				let frm = document.getElementBuId('frm');
+				let data = new FormData(frm);
+				
+				//ajax
+				$.ajax({
+					dontentType : false,
+					processData: false,
+					url:'../fileModifyServlet',
+					data: data,
+					type:'post',
+					dataType : 'json',
+					success: function(result){   //{"retCode":Fail"}
+						if( result.retCode == 'Success'){
+							window.alert('정보수정됨');
+							//화면수정
+						}else {
+							window.alert('수정예외발생');
+						}
+					},
+					error: function(err){
+						console.log(err);
+					}			
+				})
+			});
+				
+			
+			
 		});
 	</script>
 </head>
@@ -166,7 +197,10 @@
 				<td><input type="file" name="filename" id="filename"></td>
 			</tr>
 			<tr>
-				<td cospan="3"><input type="submit"> <input type="reset"></td>
+				<td cospan="3">
+				<input type="submit" value="Submit"> 
+				<input type="reset" value="Reset">
+				<button id="modifyBtn">수정</button></td>
 			</tr>
 		</table>
 	</form>
